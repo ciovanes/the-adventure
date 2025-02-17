@@ -622,7 +622,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_lecrs")
 }],
-"loop": true,
+"loop": false,
 "name": &"shield_defense",
 "speed": 10.0
 }, {
@@ -680,7 +680,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_y3do0")
 }],
-"loop": true,
+"loop": false,
 "name": &"spell_cast",
 "speed": 10.0
 }, {
@@ -745,10 +745,8 @@ script = ExtResource("1_plekw")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_2ulbj")
-animation = &"attack"
+animation = &"spell_cast"
 autoplay = "idle"
-frame = 4
-frame_progress = 0.990953
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 13)

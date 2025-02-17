@@ -6,6 +6,8 @@ extends CharacterBody2D
 @onready var animated_sprite_2d = $AnimatedSprite2D
 
 var is_attacking = false
+var is_defending = false
+var is_healing = false
 
 func _ready():
 	# Conectar la señal animation_finished a una función
@@ -13,14 +15,27 @@ func _ready():
 
 func _process(delta: float) -> void:
 	if is_on_floor():
-		if Input.is_action_just_pressed("attack") and not is_attacking:
+		if Input.is_action_just_pressed("attack") and not is_attacking and not is_defending:
 			attack()
+		if Input.is_action_just_pressed("defense") and not is_attacking and not is_defending:
+			defense()
+		if Input.is_action_just_pressed("spell_cast"):
+			heal()
 
 func attack():
 	is_attacking = true
 	speed = 10
 	animated_sprite_2d.play("attack")
 
+func defense():
+	is_defending = true
+	speed = 10
+	animated_sprite_2d.play("shield_defense")
+
+func heal():
+	is_healing = true
+	speed = 0
+	animated_sprite_2d.play("spell_cast")
 
 func _physics_process(delta: float) -> void:
 	# Añadir gravedad
@@ -51,7 +66,7 @@ func _physics_process(delta: float) -> void:
 	update_animations(direction)
 
 func update_animations(direction) -> void:
-	if not is_attacking:
+	if not is_attacking and not is_defending and not is_healing:
 		if is_on_floor():
 			if direction == 0:
 				animated_sprite_2d.play("idle")
@@ -63,6 +78,13 @@ func update_animations(direction) -> void:
 
 
 func _on_animated_sprite_2d_animation_finished() -> void:
-	if animated_sprite_2d.animation == "attack":
-		is_attacking = false
-		speed = 80
+	match animated_sprite_2d.animation:
+		"attack":
+			is_attacking = false
+			speed = 80
+		"shield_defense":
+			is_defending = false
+			speed = 80
+		"spell_cast":
+			is_healing = false
+			speed = 80

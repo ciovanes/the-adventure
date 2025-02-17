@@ -7,14 +7,20 @@ extends CharacterBody2D
 
 var is_attacking = false
 
+func _ready():
+	# Conectar la señal animation_finished a una función
+	animated_sprite_2d.connect("animation_finished", Callable(self, "_on_animated_sprite_2d_animation_finished"))
+
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("attack") and not is_attacking:
-		attack()
+	if is_on_floor():
+		if Input.is_action_just_pressed("attack") and not is_attacking:
+			attack()
 
 func attack():
 	is_attacking = true
+	speed = 10
 	animated_sprite_2d.play("attack")
-	is_attacking = false
+
 
 func _physics_process(delta: float) -> void:
 	# Añadir gravedad
@@ -35,6 +41,16 @@ func _physics_process(delta: float) -> void:
 		animated_sprite_2d.flip_h = false
 
 	# Si el personaje no está atacando, manejar las animaciones de movimiento
+
+	if direction:
+		velocity.x = direction * speed
+	else:
+		velocity.x = move_toward(velocity.x, 0, speed)
+
+	move_and_slide()
+	update_animations(direction)
+
+func update_animations(direction) -> void:
 	if not is_attacking:
 		if is_on_floor():
 			if direction == 0:
@@ -45,9 +61,8 @@ func _physics_process(delta: float) -> void:
 			if velocity.y < 0:
 				animated_sprite_2d.play("jump")
 
-	if direction:
-		velocity.x = direction * speed
-	else:
-		velocity.x = move_toward(velocity.x, 0, speed)
 
-	move_and_slide()
+func _on_animated_sprite_2d_animation_finished() -> void:
+	if animated_sprite_2d.animation == "attack":
+		is_attacking = false
+		speed = 80

@@ -5,7 +5,7 @@ extends CharacterBody2D
 @export var jump_force = -300.0
 @export var gravity = 800.0
 @export var air_resistance = 0.8  
-@export var ground_friction = 0.9 
+@export var ground_friction = 0.9
 @export var max_fall_speed = 500.0
 @export var hard_landing_threshold = 300.0 
 
@@ -18,9 +18,9 @@ var jump_buffer_time = 0.1  # Time to buffer a jump before touching the ground
 var jump_buffer_timer = 0.0
 
 # Character states
-enum State { IDLE, RUNNING, JUMPING, FALLING, LANDING, ATTACKING, DEFENDING, HEALING }
+enum State { IDLE, RUNNING, JUMPING, FALLING, LANDING, ATTACKING, SLIDING, DEFENDING, HEALING }
 var current_state = State.IDLE
-const BUSY_STATES = [State.ATTACKING, State.DEFENDING, State.HEALING, State.LANDING]
+const BUSY_STATES = [State.ATTACKING, State.DEFENDING, State.HEALING, State.LANDING, State.SLIDING]
 
 var last_y_velocity = 0.0
 var was_in_air = false
@@ -42,10 +42,9 @@ func _physics_process(delta: float) -> void:
 	
 	if not is_on_floor():
 		last_y_velocity = velocity.y
-	
+
 	if is_on_floor() and was_in_air:
 		if last_y_velocity > hard_landing_threshold:
-			print("LASTYVEL: ", last_y_velocity)
 			set_state(State.LANDING)
 		else:
 			set_state(State.IDLE)
@@ -59,11 +58,16 @@ func handle_input() -> void:
 		set_state(State.DEFENDING)
 	elif Input.is_action_just_pressed("spell_cast"):
 		set_state(State.HEALING)
+	elif Input.is_action_just_pressed("slide"):
+		if current_state != State.IDLE:
+			set_state(State.SLIDING)
 
 func set_state(new_state: State) -> void:
 	current_state = new_state
 	
 	match new_state:
+		State.SLIDING:
+			slide()
 		State.LANDING:
 			land()
 		State.ATTACKING:
@@ -102,18 +106,19 @@ func handle_jump(delta: float) -> void:
 func handle_movement(delta: float) -> void:
 	var direction := Input.get_axis("move_left", "move_right")
 	
-	if direction != 0:
+	if direction != 0 and current_state != State.SLIDING:
 		is_facing_right = direction > 0
 		animated_sprite_2d.flip_h = !is_facing_right
-
-	if direction:
-		velocity.x = direction * speed
-	else:
-		# Apply friction in the ground or resistance in the air
-		if is_on_floor():
-			velocity.x *= ground_friction
+		
+	if current_state != State.SLIDING:
+		if direction:
+			velocity.x = direction * speed
 		else:
-			velocity.x *= air_resistance
+			# Apply friction in the ground or resistance in the air
+			if is_on_floor():
+				velocity.x *= ground_friction
+			else:
+				velocity.x *= air_resistance
 
 func update_animations() -> void:
 	if current_state not in BUSY_STATES:
@@ -131,6 +136,10 @@ func update_animations() -> void:
 			else:
 				set_state(State.FALLING)
 				animated_sprite_2d.play("fall")
+
+func slide() -> void:
+	velocity.x = speed * 0.9 * (1 if is_facing_right else -1)
+	animated_sprite_2d.play("slide")
 
 func land() -> void:
 	speed = 10
@@ -153,7 +162,7 @@ func reset_speed() -> void:
 
 # Finalización de animaciones
 func _on_animated_sprite_2d_animation_finished() -> void:
-	var busy_animations = ["land", "attack", "shield_defense", "spell_cast"]
+	var busy_animations = ["land", "attack", "shield_defense", "spell_cast", "slide"]
 	
 	if animated_sprite_2d.animation in busy_animations:
 		set_state(State.IDLE)

@@ -11,7 +11,9 @@ extends CharacterBody2D
 
 @onready var animated_sprite_2d = $AnimatedSprite2D
 @onready var hitbox = $Hitbox/CollisionShape2D
+@onready var attack_timer = $attack_timer
 @onready var hurtbox = $Hurtbox/CollisionShape2D
+
 
 var is_facing_right = true
 var coyote_time = 0.1  # Time to jump after leaving the ground 
@@ -155,7 +157,7 @@ func land() -> void:
 func attack() -> void:
 	speed = 10
 	animated_sprite_2d.play("attack")
-	hitbox.disabled = false
+	attack_timer.start()
 
 func defense() -> void:
 	speed = 10
@@ -180,3 +182,7 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 	if animated_sprite_2d.animation in busy_animations:
 		set_state(State.IDLE)
 		reset_combat_boxes()
+
+
+func _on_timer_timeout() -> void:
+	hitbox.disabled = false

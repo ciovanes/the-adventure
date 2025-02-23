@@ -1,4 +1,4 @@
-[gd_scene load_steps=50 format=3 uid="uid://bvxn2isjbbmcd"]
+[gd_scene load_steps=49 format=3 uid="uid://bvxn2isjbbmcd"]
 
 [ext_resource type="Script" path="res://scripts/skeleton_enemy.gd" id="1_6qsys"]
 [ext_resource type="Texture2D" uid="uid://7ytd2bmg637o" path="res://assets/sprites/skeleton_enemy/Skeleton enemy.png" id="1_7xtyj"]
@@ -197,7 +197,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_bnpvw")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack",
 "speed": 8.0
 }, {
@@ -328,17 +328,16 @@ radius = 21.0
 height = 42.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_olhmc"]
-size = Vector2(237, 61)
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_nevlr"]
-radius = 25.0799
+size = Vector2(237, 31)
 
 [node name="SkeletonEnemy" type="CharacterBody2D"]
 script = ExtResource("1_6qsys")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_4j8nf")
-animation = &"attack"
+animation = &"chase"
+frame = 11
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CapsuleShape2D_acf22")
@@ -355,7 +354,6 @@ debug_color = Color(0, 0.645221, 0.264756, 0.42)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2(9, -7)
 shape = SubResource("CapsuleShape2D_r8f7k")
-disabled = true
 debug_color = Color(0.867516, 0.299849, 0.489696, 0.42)
 
 [node name="DeathTimer" type="Timer" parent="."]
@@ -365,27 +363,13 @@ one_shot = true
 [node name="DetectionArea" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
-position = Vector2(0, -15.5)
 shape = SubResource("RectangleShape2D_olhmc")
 debug_color = Color(0.506257, 0.574641, 0.20994, 0.42)
 
-[node name="AttackingArea" type="Area2D" parent="."]
-collision_mask = 2
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackingArea"]
-position = Vector2(0, -4)
-shape = SubResource("CircleShape2D_nevlr")
-debug_color = Color(0.36144, 0.52942, 0.84279, 0.42)
-
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
-
-[node name="AttackCooldown" type="Timer" parent="."]
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_area_2d_area_entered"]
 [connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]
-[connection signal="body_entered" from="AttackingArea" to="." method="_on_attacking_area_body_entered"]
-[connection signal="body_exited" from="AttackingArea" to="." method="_on_attacking_area_body_exited"]
-[connection signal="timeout" from="AttackCooldown" to="." method="_on_attack_cooldown_timeout"]

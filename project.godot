@@ -30,6 +30,12 @@ project/assembly_name="tims-quest"
 
 enabled=PackedStringArray("res://addons/godot-vim/plugin.cfg")
 
+[global_group]
+
+enemy_hurtbox=""
+player=""
+player_hurtbox=""
+
 [input]
 
 jump={
@@ -70,8 +76,12 @@ slide={
 
 [layer_names]
 
-2d_render/layer_1="Worl"
-2d_render/layer_2="Enemies"
+2d_render/layer_1="World"
+2d_render/layer_2="Player"
+2d_render/layer_3="Enemies"
+2d_physics/layer_1="Enviroment"
+2d_physics/layer_2="Player"
+2d_physics/layer_3="Enemies"
 
 [rendering]
 

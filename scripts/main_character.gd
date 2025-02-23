@@ -1,13 +1,16 @@
 extends CharacterBody2D
 
 
-@export var speed = 150.0
-@export var jump_force = -300.0
-@export var gravity = 800.0
-@export var air_resistance = 0.8  
-@export var ground_friction = 0.9
-@export var max_fall_speed = 500.0
-@export var hard_landing_threshold = 300.0 
+@export var health: int = 30
+@export var speed: float = 150.0
+@export var jump_force: float = -300.0
+@export var gravity: float = 800.0
+@export var air_resistance: float = 0.8  
+@export var ground_friction: float = 0.9
+@export var max_fall_speed: float = 500.0
+@export var hard_landing_threshold: float = 300.0 
+
+@export var attack_damage: int = 10
 
 @onready var animated_sprite_2d = $AnimatedSprite2D
 @onready var hitbox = $Hitbox/CollisionShape2D
@@ -15,11 +18,11 @@ extends CharacterBody2D
 @onready var hurtbox = $Hurtbox/CollisionShape2D
 
 
-var is_facing_right = true
-var coyote_time = 0.1  # Time to jump after leaving the ground 
-var coyote_timer = 0.0
-var jump_buffer_time = 0.1  # Time to buffer a jump before touching the ground 
-var jump_buffer_timer = 0.0
+var is_facing_right: bool = true
+var coyote_time: float = 0.1  # Time to jump after leaving the ground 
+var coyote_timer: float = 0.0
+var jump_buffer_time: float = 0.1  # Time to buffer a jump before touching the ground 
+var jump_buffer_timer: float = 0.0
 
 # Character states
 enum State { IDLE, RUNNING, JUMPING, FALLING, LANDING, ATTACKING, SLIDING, DEFENDING, HEALING }
@@ -30,8 +33,8 @@ var last_y_velocity = 0.0
 var was_in_air = false
 
 
-func _ready():
-	animated_sprite_2d.connect("animation_finished", Callable(self, "_on_animated_sprite_2d_animation_finished"))
+#func _ready():
+	#animated_sprite_2d.connect("animation_finished", Callable(self, "_on_animated_sprite_2d_animation_finished"))
 
 func _process(delta: float) -> void:
 	if is_on_floor() and current_state not in BUSY_STATES:
@@ -162,7 +165,7 @@ func attack() -> void:
 func defense() -> void:
 	speed = 10
 	animated_sprite_2d.play("shield_defense")
-	hurtbox.disabled = false
+	hurtbox.disabled = true 
 
 func heal() -> void:
 	speed = 0
@@ -173,7 +176,7 @@ func reset_speed() -> void:
 
 func reset_combat_boxes():
 		hitbox.disabled = true
-		hurtbox.disabled = true
+		hurtbox.disabled = false
 
 # Finalización de animaciones
 func _on_animated_sprite_2d_animation_finished() -> void:
@@ -186,3 +189,13 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 
 func _on_timer_timeout() -> void:
 	hitbox.disabled = false
+	
+func take_damage(damage: int):
+	print("Main character got a hit")
+	health -= damage
+	print("Main character health: ", health)
+
+
+func _on_hitbox_area_entered(area: Area2D) -> void:
+	if area.is_in_group("enemy_hurtbox"):
+		area.get_parent().take_damage(attack_damage)

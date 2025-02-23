@@ -792,12 +792,13 @@ height = 22.0
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_p0v71"]
 radius = 9.0
 
-[node name="CharacterBody2D" type="CharacterBody2D"]
+[node name="MainCharacter" type="CharacterBody2D" groups=["player"]]
+collision_layer = 3
 script = ExtResource("1_plekw")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_2ulbj")
-animation = &"take_damage"
+animation = &"run"
 autoplay = "idle"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -813,12 +814,11 @@ shape = SubResource("CapsuleShape2D_3oubu")
 disabled = true
 debug_color = Color(0.867516, 0.299849, 0.489696, 0.42)
 
-[node name="Hurtbox" type="Area2D" parent="."]
+[node name="Hurtbox" type="Area2D" parent="." groups=["player_hurtbox"]]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
 position = Vector2(0, 13)
 shape = SubResource("CapsuleShape2D_p0v71")
-disabled = true
 debug_color = Color(0.442997, 0.593986, 0.202582, 0.42)
 
 [node name="attack_timer" type="Timer" parent="."]
@@ -826,4 +826,5 @@ wait_time = 0.3
 one_shot = true
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
 [connection signal="timeout" from="attack_timer" to="." method="_on_timer_timeout"]

@@ -1,4 +1,4 @@
-[gd_scene load_steps=106 format=3 uid="uid://mps247n58e6c"]
+[gd_scene load_steps=108 format=3 uid="uid://mps247n58e6c"]
 
 [ext_resource type="Texture2D" uid="uid://bcvdpcnl3vc38" path="res://assets/sprites/main_character/char_red_1.png" id="1_ihnw8"]
 [ext_resource type="Script" path="res://scripts/main_character.gd" id="1_plekw"]
@@ -696,7 +696,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_03dh5")
 }],
-"loop": true,
+"loop": false,
 "name": &"slide",
 "speed": 10.0
 }, {
@@ -785,18 +785,41 @@ animations = [{
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_23utn"]
 radius = 8.0
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3oubu"]
+radius = 11.0
+height = 22.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_p0v71"]
+radius = 9.0
+
 [node name="CharacterBody2D" type="CharacterBody2D"]
 script = ExtResource("1_plekw")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_2ulbj")
-animation = &"land"
+animation = &"attack"
 autoplay = "idle"
-frame = 2
+frame = 5
 frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 13)
 shape = SubResource("CapsuleShape2D_23utn")
+
+[node name="Hitbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(16, 13)
+shape = SubResource("CapsuleShape2D_3oubu")
+disabled = true
+debug_color = Color(0.867516, 0.299849, 0.489696, 0.42)
+
+[node name="Hurtbox" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, 13)
+shape = SubResource("CapsuleShape2D_p0v71")
+disabled = true
+debug_color = Color(0.442997, 0.593986, 0.202582, 0.42)
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]

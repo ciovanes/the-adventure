@@ -10,6 +10,8 @@ extends CharacterBody2D
 @export var hard_landing_threshold = 300.0 
 
 @onready var animated_sprite_2d = $AnimatedSprite2D
+@onready var hitbox = $Hitbox/CollisionShape2D
+@onready var hurtbox = $Hurtbox/CollisionShape2D
 
 var is_facing_right = true
 var coyote_time = 0.1  # Time to jump after leaving the ground 
@@ -110,6 +112,11 @@ func handle_movement(delta: float) -> void:
 		is_facing_right = direction > 0
 		animated_sprite_2d.flip_h = !is_facing_right
 		
+		if is_facing_right:
+			hitbox.position.x = abs(hitbox.position.x)
+		else:
+			hitbox.position.x = -abs(hitbox.position.x)
+
 	if current_state != State.SLIDING:
 		if direction:
 			velocity.x = direction * speed
@@ -148,10 +155,12 @@ func land() -> void:
 func attack() -> void:
 	speed = 10
 	animated_sprite_2d.play("attack")
+	hitbox.disabled = false
 
 func defense() -> void:
 	speed = 10
 	animated_sprite_2d.play("shield_defense")
+	hurtbox.disabled = false
 
 func heal() -> void:
 	speed = 0
@@ -160,9 +169,14 @@ func heal() -> void:
 func reset_speed() -> void:
 	speed = 150.0
 
+func reset_combat_boxes():
+		hitbox.disabled = true
+		hurtbox.disabled = true
+
 # Finalización de animaciones
 func _on_animated_sprite_2d_animation_finished() -> void:
 	var busy_animations = ["land", "attack", "shield_defense", "spell_cast", "slide"]
 	
 	if animated_sprite_2d.animation in busy_animations:
 		set_state(State.IDLE)
+		reset_combat_boxes()

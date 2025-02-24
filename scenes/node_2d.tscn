@@ -875,37 +875,46 @@ sources/0 = SubResource("TileSetAtlasSource_gf72c")
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 
 [node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
-texture_filter = 1
-motion_scale = Vector2(0, 1)
-motion_mirroring = Vector2(1440, 0)
+motion_scale = Vector2(0.1, 0.1)
+motion_mirroring = Vector2(960, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
 texture = ExtResource("1_o4i53")
+centered = false
 
 [node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_mirroring = Vector2(1440, 0)
+motion_scale = Vector2(0.2, 0.2)
+motion_mirroring = Vector2(960, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer2"]
 texture = ExtResource("2_n0svd")
+centered = false
 
 [node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_mirroring = Vector2(1440, 0)
+motion_scale = Vector2(0.5, 0.5)
+motion_mirroring = Vector2(960, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer3"]
 texture = ExtResource("3_ea6yf")
+centered = false
 
 [node name="ParallaxLayer4" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_mirroring = Vector2(1440, 0)
+texture_filter = 1
+texture_repeat = 2
+motion_scale = Vector2(0.8, 0.8)
+motion_mirroring = Vector2(960, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer4"]
 texture = ExtResource("4_sgm5g")
+centered = false
 
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray("AAD//wAAAAAwAAEAAAD6/wAAAAAvAAEAAAAEAAAAAAA5AAEAAAD8/wIAAAA3AAYAAAD8/wUAAAA3AAYAAAD8/wgAAAA3AAYAAAD8/wsAAAA3AAYAAAACAAIAAAA3AAYAAAACAAUAAAA3AAYAAAACAAgAAAA3AAYAAAACAAsAAAA3AAYAAAAIAAAAAAAwAAEAAAAPAAAAAAAwAAEAAAAXAAAAAAAwAAEAAAAeAAAAAAAwAAEAAAA=")
+position = Vector2(391, 271)
+tile_map_data = PackedByteArray("AAD//wAAAAAwAAEAAAD6/wAAAAAvAAEAAAAEAAAAAAA5AAEAAAD8/wIAAAA3AAYAAAD8/wUAAAA3AAYAAAD8/wgAAAA3AAYAAAD8/wsAAAA3AAYAAAACAAIAAAA3AAYAAAACAAUAAAA3AAYAAAACAAgAAAA3AAYAAAACAAsAAAA3AAYAAAAIAAAAAAAwAAEAAAAPAAAAAAAwAAEAAAAXAAAAAAAwAAEAAAAeAAAAAAAwAAEAAAAmAAAAAAAwAAEAAAAvAAAAAAAwAAEAAAA4AAAAAAAwAAEAAAA/AAAAAAAwAAEAAABIAAAAAAAwAAEAAABPAAAAAAAwAAEAAABYAAAAAAAwAAEAAABhAAAAAAAwAAEAAABpAAAAAAAwAAEAAAD1/wAAAAAwAAEAAADs/wAAAAAwAAEAAADj/wAAAAAwAAEAAAA=")
 tile_set = SubResource("TileSet_5c0fo")
 
 [node name="MainCharacter" parent="." instance=ExtResource("6_5dhj1")]
-position = Vector2(-17, -28)
+position = Vector2(374, 243)
 
 [node name="Camera2D" type="Camera2D" parent="MainCharacter"]
 position = Vector2(17, 28)

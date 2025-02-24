@@ -1,7 +1,6 @@
 extends CharacterBody2D
 
 
-@export var health: int = 30
 @export var speed: float = 150.0
 @export var jump_force: float = -300.0
 @export var gravity: float = 800.0
@@ -10,12 +9,22 @@ extends CharacterBody2D
 @export var max_fall_speed: float = 500.0
 @export var hard_landing_threshold: float = 300.0 
 
+@export var max_health: int = 3
+var health: int = max_health
+var is_dead: bool = false
+signal health_updated(new_health)
+
+var mana: int = 100
+signal mana_updated(new_mana)
+
+
 @export var attack_damage: int = 10
 
 @onready var animated_sprite_2d = $AnimatedSprite2D
 @onready var hitbox = $Hitbox/CollisionShape2D
 @onready var attack_timer = $attack_timer
 @onready var hurtbox = $Hurtbox/CollisionShape2D
+@onready var collision_shape = $CollisionShape2D
 
 
 var is_facing_right: bool = true
@@ -25,9 +34,9 @@ var jump_buffer_time: float = 0.1  # Time to buffer a jump before touching the g
 var jump_buffer_timer: float = 0.0
 
 # Character states
-enum State { IDLE, RUNNING, JUMPING, FALLING, LANDING, ATTACKING, SLIDING, DEFENDING, HEALING }
+enum State { IDLE, RUNNING, JUMPING, FALLING, LANDING, ATTACKING, SLIDING, DEFENDING, HEALING, TAKING_DAMAGE }
 var current_state = State.IDLE
-const BUSY_STATES = [State.ATTACKING, State.DEFENDING, State.HEALING, State.LANDING, State.SLIDING]
+const BUSY_STATES = [State.ATTACKING, State.DEFENDING, State.HEALING, State.LANDING, State.SLIDING, State.TAKING_DAMAGE]
 
 var last_y_velocity = 0.0
 var was_in_air = false
@@ -168,34 +177,60 @@ func defense() -> void:
 	hurtbox.disabled = true 
 
 func heal() -> void:
+	if health == max_health or mana < 100:
+		current_state = State.IDLE
+		return
+		
+	mana -= 100
+	mana_updated.emit(mana)
+	health += 1
+	health_updated.emit(health)
 	speed = 0
 	animated_sprite_2d.play("spell_cast")
 
 func reset_speed() -> void:
 	speed = 150.0
 
-func reset_combat_boxes():
-		hitbox.disabled = true
-		hurtbox.disabled = false
+func reset_combat_boxes(animation: String):
+	if animation == "shield_defense":
+		await get_tree().create_timer(0.5).timeout
+		
+	hitbox.disabled = true
+	hurtbox.disabled = false
 
 # Finalización de animaciones
 func _on_animated_sprite_2d_animation_finished() -> void:
-	var busy_animations = ["land", "attack", "shield_defense", "spell_cast", "slide"]
+	var busy_animations = ["land", "attack", "shield_defense", "spell_cast", "slide", "take_damage"]
 	
 	if animated_sprite_2d.animation in busy_animations:
 		set_state(State.IDLE)
-		reset_combat_boxes()
+		reset_combat_boxes(animated_sprite_2d.animation)
 
 
 func _on_timer_timeout() -> void:
 	hitbox.disabled = false
 	
+func die() -> void:
+	is_dead = true
+	collision_shape.set_deferred("disabled", true)
+	hurtbox.disabled = true
+	set_physics_process(false)
+	animated_sprite_2d.play("death")
+	
 func take_damage(damage: int):
-	print("Main character got a hit")
-	health -= damage
-	print("Main character health: ", health)
+	if current_state != State.DEFENDING:
+		health -= damage
+		health_updated.emit(health)
+		print("Current health :", health)
+		if health <= 0: 
+			die()
+		else:
+			current_state = State.TAKING_DAMAGE
+			animated_sprite_2d.play("take_damage")
 
 
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("enemy_hurtbox"):
 		area.get_parent().take_damage(attack_damage)
+		mana += 10
+		mana_updated.emit(mana)

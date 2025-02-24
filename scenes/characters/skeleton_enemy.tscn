@@ -344,6 +344,7 @@ animation = &"attack"
 shape = SubResource("CapsuleShape2D_acf22")
 
 [node name="Hurtbox" type="Area2D" parent="." groups=["enemy_hurtbox"]]
+visible = false
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
@@ -351,6 +352,7 @@ shape = SubResource("CapsuleShape2D_gress")
 debug_color = Color(0, 0.645221, 0.264756, 0.42)
 
 [node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 position = Vector2(9, -7)
@@ -358,11 +360,8 @@ shape = SubResource("CapsuleShape2D_r8f7k")
 disabled = true
 debug_color = Color(0.867516, 0.299849, 0.489696, 0.42)
 
-[node name="DeathTimer" type="Timer" parent="."]
-wait_time = 1.5
-one_shot = true
-
 [node name="DetectionArea" type="Area2D" parent="."]
+visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
 position = Vector2(0, -15.5)
@@ -370,6 +369,7 @@ shape = SubResource("RectangleShape2D_olhmc")
 debug_color = Color(0.506257, 0.574641, 0.20994, 0.42)
 
 [node name="AttackingArea" type="Area2D" parent="."]
+visible = false
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackingArea"]
@@ -380,12 +380,18 @@ debug_color = Color(0.36144, 0.52942, 0.84279, 0.42)
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 
 [node name="AttackCooldown" type="Timer" parent="."]
+wait_time = 0.7
+
+[node name="DeathTimer" type="Timer" parent="."]
+wait_time = 1.5
+one_shot = true
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_area_2d_area_entered"]
-[connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]
+[connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]
 [connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]
 [connection signal="body_entered" from="AttackingArea" to="." method="_on_attacking_area_body_entered"]
 [connection signal="body_exited" from="AttackingArea" to="." method="_on_attacking_area_body_exited"]
 [connection signal="timeout" from="AttackCooldown" to="." method="_on_attack_cooldown_timeout"]
+[connection signal="timeout" from="DeathTimer" to="." method="_on_death_timer_timeout"]

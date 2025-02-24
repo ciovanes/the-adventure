@@ -1,0 +1,69 @@
+[gd_scene load_steps=7 format=3 uid="uid://8oy55n1o0g81"]
+
+[ext_resource type="Script" path="res://scripts/ui.gd" id="1_y78jd"]
+[ext_resource type="Texture2D" uid="uid://ca0u4redggfla" path="res://assets/heart.png" id="2_jvhgh"]
+[ext_resource type="Texture2D" uid="uid://dvq4t1ccbgpjp" path="res://assets/mana.png" id="3_b3rlp"]
+
+[sub_resource type="FontFile" id="FontFile_xfx8x"]
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/15/0/ascent = 0.0
+cache/0/15/0/descent = 0.0
+cache/0/15/0/underline_position = 0.0
+cache/0/15/0/underline_thickness = 0.0
+cache/0/15/0/scale = 1.0
+cache/0/14/0/ascent = 0.0
+cache/0/14/0/descent = 0.0
+cache/0/14/0/underline_position = 0.0
+cache/0/14/0/underline_thickness = 0.0
+cache/0/14/0/scale = 1.0
+cache/0/13/0/ascent = 0.0
+cache/0/13/0/descent = 0.0
+cache/0/13/0/underline_position = 0.0
+cache/0/13/0/underline_thickness = 0.0
+cache/0/13/0/scale = 1.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_1m5mc"]
+font = SubResource("FontFile_xfx8x")
+font_size = 13
+
+[sub_resource type="LabelSettings" id="LabelSettings_1pwur"]
+font_size = 10
+
+[node name="CanvasLayer" type="CanvasLayer"]
+script = ExtResource("1_y78jd")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 20.0
+offset_bottom = 18.0
+texture = ExtResource("2_jvhgh")
+
+[node name="PlayerHealthLabel" type="Label" parent="."]
+offset_left = 14.0
+offset_top = 2.0
+offset_right = 51.0
+offset_bottom = 21.0
+text = "3/3"
+label_settings = SubResource("LabelSettings_1m5mc")
+horizontal_alignment = 1
+
+[node name="TextureRect2" type="TextureRect" parent="."]
+offset_left = 8.0
+offset_top = 27.0
+offset_right = 19.0
+offset_bottom = 37.0
+texture = ExtResource("3_b3rlp")
+
+[node name="PlayerMana" type="Label" parent="."]
+offset_left = 22.0
+offset_top = 25.0
+offset_right = 62.0
+offset_bottom = 39.0
+text = "0
+"
+label_settings = SubResource("LabelSettings_1pwur")

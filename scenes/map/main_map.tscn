@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=4 uid="uid://bp1eakqivg3au"]
+[gd_scene load_steps=8 format=4 uid="uid://bp1eakqivg3au"]
 
 [ext_resource type="Texture2D" uid="uid://bafg1xl2e580o" path="res://assets/tilesets/oak_woods_tileset.png" id="1_jmmag"]
 [ext_resource type="PackedScene" uid="uid://mps247n58e6c" path="res://scenes/characters/main_character.tscn" id="2_21j77"]
 [ext_resource type="PackedScene" uid="uid://bvxn2isjbbmcd" path="res://scenes/characters/skeleton_enemy.tscn" id="3_igbcf"]
+[ext_resource type="PackedScene" uid="uid://8oy55n1o0g81" path="res://scenes/ui.tscn" id="4_6bx6a"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_duqw5"]
 texture = ExtResource("1_jmmag")
@@ -448,3 +449,8 @@ position = Vector2(-149, -15)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("NavigationPolygon_io24l")
+
+[node name="CanvasLayer" parent="." instance=ExtResource("4_6bx6a")]
+
+[connection signal="health_updated" from="CharacterBody2D" to="CanvasLayer" method="_on_character_body_2d_health_updated"]
+[connection signal="mana_updated" from="CharacterBody2D" to="CanvasLayer" method="_on_character_body_2d_mana_updated"]

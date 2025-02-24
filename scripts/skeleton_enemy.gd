@@ -8,17 +8,20 @@ extends CharacterBody2D
 @onready var hitbox: Area2D = $Hitbox
 @onready var hitbox_collision: CollisionShape2D = $Hitbox/CollisionShape2D
 @onready var attack_cooldown: Timer = $AttackCooldown
+@onready var attack_timer: Timer = $AttackTimer
 @onready var detection_area: Area2D = $DetectionArea
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
 
 var health: int = 30
-var attack_damage = 10
-var can_attack: bool = true
+var attack_damage = 1
 var is_dead: bool = false
 var speed: float = 40.0
 var target: Node2D = null
 var is_facing_right: bool = true
+
+
 var player_in_attack_area: bool = false
+var can_attack: bool = false 
 
 enum State { IDLE, CHASING, ATTACKING, TAKING_DAMAGE }
 var current_state: State = State.IDLE
@@ -66,14 +69,6 @@ func die() -> void:
 	animated_sprite_2d.play("death")
 	death_timer.start()
 
-func attack():
-	if can_attack and player_in_attack_area:
-		can_attack = false
-		current_state = State.ATTACKING
-		hitbox_collision.disabled = false
-		animated_sprite_2d.play("attack")
-		attack_cooldown.start()
-
 func _on_detection_area_body_entered(body: Node2D) -> void:
 	if body.is_in_group("player"): target = body
 
@@ -82,10 +77,28 @@ func _on_detection_area_body_exited(body: Node2D) -> void:
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if animated_sprite_2d.animation in ["take_damage", "attack"]:
+		await get_tree().create_timer(0.2).timeout
 		current_state = State.IDLE
 
+
+
+func attack():
+	if can_attack and player_in_attack_area:
+		can_attack = false
+		current_state = State.ATTACKING
+		
+		animated_sprite_2d.play("attack")
+	
+		await get_tree().create_timer(0.5).timeout
+		
+		if current_state == State.ATTACKING and not is_dead:
+			hitbox_collision.disabled = false
+			
+		attack_cooldown.start()
+
 func _on_attacking_area_body_entered(body: Node2D) -> void:
-	if body.is_in_group("player"):
+	if body.is_in_group("player") and not is_dead:
+		can_attack = true
 		player_in_attack_area = true
 		attack()
 
@@ -95,16 +108,16 @@ func _on_attacking_area_body_exited(body: Node2D) -> void:
 
 func _on_attack_cooldown_timeout() -> void:
 	hitbox_collision.disabled = true
-	can_attack = true
+	can_attack = true 
 	
-	if player_in_attack_area:
+	if player_in_attack_area and not is_dead:
 		attack()
 	else:
 		current_state = State.IDLE
 
-func _on_hitbox_body_entered(body: Node2D) -> void:
-	if body.is_in_group("player_hurtbox") and current_state == State.ATTACKING:
-		body.take_damage(attack_damage)
+func _on_hitbox_area_entered(area: Area2D) -> void:
+	if area.is_in_group("player_hurtbox") and current_state == State.ATTACKING:
+		area.get_parent().take_damage(attack_damage)
 
 func _on_death_timer_timeout() -> void:
 	queue_free()

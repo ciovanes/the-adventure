@@ -167,7 +167,7 @@ func land() -> void:
 	animated_sprite_2d.play("land")
 
 func attack() -> void:
-	speed = 10
+	speed = 0
 	animated_sprite_2d.play("attack")
 	attack_timer.start()
 

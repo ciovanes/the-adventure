@@ -41,9 +41,13 @@ const BUSY_STATES = [State.ATTACKING, State.DEFENDING, State.HEALING, State.LAND
 var last_y_velocity = 0.0
 var was_in_air = false
 
+# Sounds
+@onready var attack_sound = $Sounds/AttackAudio
+@onready var attack_hit_sound = $Sounds/AttackHitAudio
+@onready var defense_sound = $Sounds/DefenseAudio
+@onready var run_audio = $Sounds/RunAudio
+@onready var jump_audio = $Sounds/JumpAudio
 
-#func _ready():
-	#animated_sprite_2d.connect("animation_finished", Callable(self, "_on_animated_sprite_2d_animation_finished"))
 
 func _process(delta: float) -> void:
 	if is_on_floor() and current_state not in BUSY_STATES:
@@ -118,6 +122,8 @@ func handle_jump(delta: float) -> void:
 		jump_buffer_timer = 0.0
 		coyote_timer = 0.0
 		set_state(State.JUMPING)
+		if not jump_audio.playing:
+			jump_audio.play()
 
 func handle_movement(delta: float) -> void:
 	var direction := Input.get_axis("move_left", "move_right")
@@ -147,6 +153,8 @@ func update_animations() -> void:
 			if abs(velocity.x) > 10:
 				set_state(State.RUNNING)
 				animated_sprite_2d.play("run")
+				if not run_audio.playing:
+					run_audio.play()
 			else:
 				set_state(State.IDLE)
 				animated_sprite_2d.play("idle")
@@ -167,11 +175,13 @@ func land() -> void:
 	animated_sprite_2d.play("land")
 
 func attack() -> void:
+	attack_sound.play()
 	speed = 0
 	animated_sprite_2d.play("attack")
 	attack_timer.start()
 
 func defense() -> void:
+	defense_sound.play()
 	speed = 10
 	animated_sprite_2d.play("shield_defense")
 	hurtbox.disabled = true 
@@ -235,6 +245,7 @@ func take_damage(damage: int):
 
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("enemy_hurtbox"):
+		attack_hit_sound.play()
 		area.get_parent().take_damage(attack_damage)
 		mana += 10
 		mana_updated.emit(mana)

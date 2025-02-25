@@ -26,6 +26,10 @@ enum State { IDLE, CHASING, ATTACKING, TAKING_DAMAGE }
 var current_state: State = State.IDLE
 const BUSY_STATES = [State.ATTACKING, State.TAKING_DAMAGE]
 
+
+@onready var attack_sound = $Sounds/AttackSound
+
+
 func _physics_process(delta: float) -> void:
 	update_animations()
 	if target and current_state not in BUSY_STATES:
@@ -87,6 +91,7 @@ func attack():
 		current_state = State.ATTACKING
 		
 		animated_sprite_2d.play("attack")
+		attack_sound.play()
 	
 		await get_tree().create_timer(0.5).timeout
 		

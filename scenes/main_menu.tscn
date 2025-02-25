@@ -1,10 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://ceoh0aig73k2m"]
+[gd_scene load_steps=7 format=3 uid="uid://ceoh0aig73k2m"]
 
 [ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_2mwbm"]
 [ext_resource type="Texture2D" uid="uid://mydi2w66kpuh" path="res://assets/parallax/background1.png" id="2_k1umi"]
 [ext_resource type="Texture2D" uid="uid://cb6y1afox4n66" path="res://assets/parallax/background2.png" id="3_mfdgg"]
 [ext_resource type="Texture2D" uid="uid://bwvo6aev3wcs" path="res://assets/parallax/background3.png" id="4_rwdkn"]
 [ext_resource type="Texture2D" uid="uid://chvnjqtpccqg3" path="res://assets/saf_adventure_logo_final.png" id="5_q1fid"]
+[ext_resource type="AudioStream" uid="uid://cqh1ee5xliat0" path="res://sounds/menu.wav" id="6_jklov"]
 
 [node name="Control" type="Control"]
 layout_mode = 3
@@ -49,5 +50,9 @@ text = "Start Game"
 position = Vector2(320, 100)
 scale = Vector2(0.25601, 0.25601)
 texture = ExtResource("5_q1fid")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_jklov")
+autoplay = true
 
 [connection signal="button_down" from="StartButton" to="." method="_on_start_button_button_down"]

@@ -1,8 +1,13 @@
-[gd_scene load_steps=108 format=3 uid="uid://mps247n58e6c"]
+[gd_scene load_steps=113 format=3 uid="uid://mps247n58e6c"]
 
 [ext_resource type="Texture2D" uid="uid://bcvdpcnl3vc38" path="res://assets/sprites/main_character/char_red_1.png" id="1_ihnw8"]
 [ext_resource type="Script" path="res://scripts/main_character.gd" id="1_plekw"]
 [ext_resource type="Texture2D" uid="uid://cj8bxmejcyqwe" path="res://assets/sprites/main_character/char_red_2.png" id="2_tgssd"]
+[ext_resource type="AudioStream" uid="uid://c887023olthqp" path="res://sounds/main_character_sounds/Sword Attack 3.wav" id="4_s5hkg"]
+[ext_resource type="AudioStream" uid="uid://b0smgjoispvh4" path="res://sounds/main_character_sounds/Sword Impact Hit 3.wav" id="5_vwafy"]
+[ext_resource type="AudioStream" uid="uid://dg8tvg53o8rfa" path="res://sounds/main_character_sounds/Sword Parry 3.wav" id="6_6tleg"]
+[ext_resource type="AudioStream" uid="uid://woiiqa8n1byd" path="res://sounds/main_character_sounds/Wood Chain Run 1.wav" id="7_4p1d8"]
+[ext_resource type="AudioStream" uid="uid://def8n1dmd78in" path="res://sounds/main_character_sounds/Wood Jump.wav" id="8_5055g"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_xxc6e"]
 atlas = ExtResource("1_ihnw8")
@@ -827,6 +832,23 @@ debug_color = Color(0.442997, 0.593986, 0.202582, 0.42)
 [node name="attack_timer" type="Timer" parent="."]
 wait_time = 0.3
 one_shot = true
+
+[node name="Sounds" type="Node2D" parent="."]
+
+[node name="AttackAudio" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource("4_s5hkg")
+
+[node name="AttackHitAudio" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource("5_vwafy")
+
+[node name="DefenseAudio" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource("6_6tleg")
+
+[node name="RunAudio" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource("7_4p1d8")
+
+[node name="JumpAudio" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource("8_5055g")
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="area_entered" from="Hitbox" to="." method="_on_hitbox_area_entered"]

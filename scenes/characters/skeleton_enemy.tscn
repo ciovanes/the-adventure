@@ -1,7 +1,8 @@
-[gd_scene load_steps=50 format=3 uid="uid://bvxn2isjbbmcd"]
+[gd_scene load_steps=51 format=3 uid="uid://bvxn2isjbbmcd"]
 
 [ext_resource type="Script" path="res://scripts/skeleton_enemy.gd" id="1_6qsys"]
 [ext_resource type="Texture2D" uid="uid://7ytd2bmg637o" path="res://assets/sprites/skeleton_enemy/Skeleton enemy.png" id="1_7xtyj"]
+[ext_resource type="AudioStream" uid="uid://k24q1gnf6ran" path="res://sounds/skeleton_sounds/Bow Impact Hit 2.wav" id="3_kstct"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_v5ab2"]
 atlas = ExtResource("1_7xtyj")
@@ -382,6 +383,11 @@ wait_time = 0.7
 [node name="DeathTimer" type="Timer" parent="."]
 wait_time = 1.5
 one_shot = true
+
+[node name="Sounds" type="Node2D" parent="."]
+
+[node name="AttackSound" type="AudioStreamPlayer2D" parent="Sounds"]
+stream = ExtResource("3_kstct")
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_area_2d_area_entered"]

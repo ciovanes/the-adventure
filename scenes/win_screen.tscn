@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://bg4x48tk4ms2o"]
+[gd_scene load_steps=7 format=3 uid="uid://bg4x48tk4ms2o"]
 
 [ext_resource type="Script" path="res://scripts/win_screen.gd" id="1_q72rg"]
 [ext_resource type="Texture2D" uid="uid://mydi2w66kpuh" path="res://assets/parallax/background1.png" id="2_kj4e4"]
 [ext_resource type="Texture2D" uid="uid://cb6y1afox4n66" path="res://assets/parallax/background2.png" id="3_0hpn5"]
 [ext_resource type="Texture2D" uid="uid://bwvo6aev3wcs" path="res://assets/parallax/background3.png" id="4_e44pd"]
+[ext_resource type="AudioStream" uid="uid://cqh1ee5xliat0" path="res://sounds/menu.wav" id="5_st356"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_asvl2"]
 font_size = 31
@@ -54,6 +55,10 @@ text = "Play Again"
 [node name="MainMenu" type="Button" parent="VBoxContainer"]
 layout_mode = 2
 text = "Main Menu"
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_st356")
+autoplay = true
 
 [connection signal="button_down" from="VBoxContainer/PlayAgain" to="." method="_on_play_again_button_down"]
 [connection signal="button_down" from="VBoxContainer/MainMenu" to="." method="_on_main_menu_button_down"]

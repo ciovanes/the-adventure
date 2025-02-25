@@ -1,5 +1,6 @@
-[gd_scene load_steps=25 format=4 uid="uid://6qlvosi6ynwh"]
+[gd_scene load_steps=27 format=4 uid="uid://6qlvosi6ynwh"]
 
+[ext_resource type="AudioStream" uid="uid://bqb7h4k3i7kot" path="res://sounds/bg.wav" id="1_yt1og"]
 [ext_resource type="PackedScene" uid="uid://mps247n58e6c" path="res://scenes/characters/main_character.tscn" id="2_21j77"]
 [ext_resource type="Texture2D" uid="uid://mydi2w66kpuh" path="res://assets/parallax/background1.png" id="2_ji31d"]
 [ext_resource type="Texture2D" uid="uid://cb6y1afox4n66" path="res://assets/parallax/background2.png" id="3_2vrlb"]
@@ -11,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://t27cxub0cef6" path="res://assets/tilesets/props1.png" id="7_u8skk"]
 [ext_resource type="PackedScene" uid="uid://n7vgbeljy61k" path="res://scenes/map/torch.tscn" id="10_6mrbl"]
 [ext_resource type="PackedScene" uid="uid://dtlr4yivkhwun" path="res://scenes/map/exit_door.tscn" id="10_doh1p"]
+[ext_resource type="AudioStream" uid="uid://r75m6g8hjrrm" path="res://sounds/Cave.wav" id="11_1unku"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_gf72c"]
 texture = ExtResource("6_ex4o5")
@@ -754,6 +756,17 @@ position = Vector2(298, 168)
 
 [node name="CanvasModulate" type="CanvasModulate" parent="MainCharacter"]
 color = Color(0.650129, 0.650128, 0.650128, 1)
+
+[node name="AudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="MainCharacter"]
+position = Vector2(-298, -168)
+stream = ExtResource("11_1unku")
+autoplay = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="MainCharacter"]
+position = Vector2(-298, -168)
+stream = ExtResource("1_yt1og")
+volume_db = -10.0
+autoplay = true
 
 [node name="Camera2D" type="Camera2D" parent="MainCharacter"]
 position = Vector2(17, 28)

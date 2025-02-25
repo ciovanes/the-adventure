@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-
+# Physics
 @export var speed: float = 150.0
 @export var jump_force: float = -300.0
 @export var gravity: float = 800.0
@@ -9,37 +9,39 @@ extends CharacterBody2D
 @export var max_fall_speed: float = 500.0
 @export var hard_landing_threshold: float = 300.0 
 
+# Health
 @export var max_health: int = 3
 var health: int = max_health
 var is_dead: bool = false
 signal health_updated(new_health)
 
-var mana: int = 100
+# Mana
+@export var mana: int = 0
 signal mana_updated(new_mana)
 
-
+# Attack
 @export var attack_damage: int = 10
 
+# Collisions and Areas
 @onready var animated_sprite_2d = $AnimatedSprite2D
 @onready var hitbox = $Hitbox/CollisionShape2D
 @onready var attack_timer = $attack_timer
 @onready var hurtbox = $Hurtbox/CollisionShape2D
 @onready var collision_shape = $CollisionShape2D
 
-
+# Movement
 var is_facing_right: bool = true
 var coyote_time: float = 0.1  # Time to jump after leaving the ground 
 var coyote_timer: float = 0.0
 var jump_buffer_time: float = 0.1  # Time to buffer a jump before touching the ground 
 var jump_buffer_timer: float = 0.0
+var last_y_velocity = 0.0
+var was_in_air = false
 
 # Character states
 enum State { IDLE, RUNNING, JUMPING, FALLING, LANDING, ATTACKING, SLIDING, DEFENDING, HEALING, TAKING_DAMAGE }
 var current_state = State.IDLE
 const BUSY_STATES = [State.ATTACKING, State.DEFENDING, State.HEALING, State.LANDING, State.SLIDING, State.TAKING_DAMAGE]
-
-var last_y_velocity = 0.0
-var was_in_air = false
 
 # Sounds
 @onready var attack_sound = $Sounds/AttackAudio
@@ -119,9 +121,12 @@ func handle_jump(delta: float) -> void:
 
 	if jump_buffer_timer > 0 and coyote_timer > 0 and current_state not in BUSY_STATES:
 		velocity.y = jump_force
+
 		jump_buffer_timer = 0.0
 		coyote_timer = 0.0
+		
 		set_state(State.JUMPING)
+
 		if not jump_audio.playing:
 			jump_audio.play()
 
@@ -191,10 +196,12 @@ func heal() -> void:
 		current_state = State.IDLE
 		return
 		
+	# Send signal to ui
 	mana -= 100
 	mana_updated.emit(mana)
 	health += 1
 	health_updated.emit(health)
+
 	speed = 0
 	animated_sprite_2d.play("spell_cast")
 
@@ -216,7 +223,6 @@ func _on_animated_sprite_2d_animation_finished() -> void:
 		set_state(State.IDLE)
 		reset_combat_boxes(animated_sprite_2d.animation)
 
-
 func _on_timer_timeout() -> void:
 	hitbox.disabled = false
 	
@@ -235,13 +241,12 @@ func take_damage(damage: int):
 	if current_state != State.DEFENDING:
 		health -= damage
 		health_updated.emit(health)
-		print("Current health :", health)
+
 		if health <= 0: 
 			die()
 		else:
 			current_state = State.TAKING_DAMAGE
 			animated_sprite_2d.play("take_damage")
-
 
 func _on_hitbox_area_entered(area: Area2D) -> void:
 	if area.is_in_group("enemy_hurtbox"):

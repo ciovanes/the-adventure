@@ -1,42 +1,48 @@
 extends CharacterBody2D
 
+
+# Collisions and Areas
+@onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var hurtbox: Area2D = $Hurtbox
 @onready var hurtbox_collision: CollisionShape2D = $Hurtbox/CollisionShape2D
-@onready var animated_sprite_2d: AnimatedSprite2D = $AnimatedSprite2D
 @onready var death_timer: Timer = $DeathTimer
 @onready var hitbox: Area2D = $Hitbox
 @onready var hitbox_collision: CollisionShape2D = $Hitbox/CollisionShape2D
 @onready var attack_cooldown: Timer = $AttackCooldown
 @onready var detection_area: Area2D = $DetectionArea
-@onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
 
+# Status
 var health: int = 30
 var attack_damage = 1
 var is_dead: bool = false
-var speed: float = 40.0
-var target: Node2D = null
 var is_facing_right: bool = true
+var speed: float = 40.0
 
-
-var player_in_attack_area: bool = false
-var can_attack: bool = false 
-
+# States
 enum State { IDLE, CHASING, ATTACKING, TAKING_DAMAGE }
 var current_state: State = State.IDLE
 const BUSY_STATES = [State.ATTACKING, State.TAKING_DAMAGE]
 
+# Pahtfinding
+@onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
+var target: Node2D = null
+var player_in_attack_area: bool = false
+var can_attack: bool = false 
 
+# Sounds
 @onready var attack_sound = $Sounds/AttackSound
 
 
 func _physics_process(delta: float) -> void:
 	update_animations()
+	
 	if target and current_state not in BUSY_STATES:
 		handle_chasing()
 
 func handle_chasing():
 	current_state = State.CHASING
+	
 	var target_position = Vector2(target.global_position.x, global_position.y)
 	navigation_agent.target_position = target_position
 	var next_position = navigation_agent.get_next_path_position()
@@ -44,46 +50,60 @@ func handle_chasing():
 	
 	is_facing_right = direction.x >= 0
 	animated_sprite_2d.flip_h = !is_facing_right
-	hitbox_collision.position.x = abs(hitbox_collision.position.x) if is_facing_right else -abs(hitbox_collision.position.x)
+
+	if is_facing_right:
+		hitbox_collision.position.x = abs(hitbox_collision.position.x)
+	else:
+		hitbox_collision.position.x = -abs(hitbox_collision.position.x)
 	
 	velocity.x = direction.x * speed
+	
 	move_and_slide()
 
 func update_animations():
 	match current_state:
-		State.IDLE: animated_sprite_2d.play("idle")
-		State.CHASING: animated_sprite_2d.play("chase")
-		State.ATTACKING: animated_sprite_2d.play("attack")
+		State.IDLE: 
+			animated_sprite_2d.play("idle")
+		State.CHASING: 
+			animated_sprite_2d.play("chase")
+		State.ATTACKING: 
+			animated_sprite_2d.play("attack")
 
 func take_damage(damage: int) -> void:
 	if is_dead: 
 		return
+		
 	health -= damage
 	current_state = State.TAKING_DAMAGE
 	animated_sprite_2d.play("take_damage")
-	if health <= 0: die()
+	
+	if health <= 0:
+		die()
 
 func die() -> void:
 	is_dead = true
+	
 	collision_shape.set_deferred("disabled", true)
 	hurtbox_collision.disabled = true
 	hurtbox.monitoring = false
+	
 	set_physics_process(false)
+	
 	animated_sprite_2d.play("death")
 	death_timer.start()
 
 func _on_detection_area_body_entered(body: Node2D) -> void:
-	if body.is_in_group("player"): target = body
+	if body.is_in_group("player"): 
+		target = body
 
 func _on_detection_area_body_exited(body: Node2D) -> void:
-	if body == target: target = null
+	if body == target: 
+		target = null
 
 func _on_animated_sprite_2d_animation_finished() -> void:
 	if animated_sprite_2d.animation in ["take_damage", "attack"]:
 		await get_tree().create_timer(0.2).timeout
 		current_state = State.IDLE
-
-
 
 func attack():
 	if can_attack and player_in_attack_area:

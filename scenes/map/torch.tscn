@@ -1,6 +1,6 @@
 [gd_scene load_steps=14 format=3 uid="uid://n7vgbeljy61k"]
 
-[ext_resource type="Texture2D" uid="uid://diex2vtja6usk" path="res://assets/sprites/Torch Animated.png" id="1_4cv3k"]
+[ext_resource type="Texture2D" uid="uid://diex2vtja6usk" path="res://assets/Torch Animated.png" id="1_4cv3k"]
 [ext_resource type="Script" path="res://scripts/torch.gd" id="1_nhse6"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1w2vr"]

@@ -1,0 +1,89 @@
+[gd_scene load_steps=14 format=3 uid="uid://n7vgbeljy61k"]
+
+[ext_resource type="Texture2D" uid="uid://diex2vtja6usk" path="res://assets/sprites/Torch Animated.png" id="1_4cv3k"]
+[ext_resource type="Script" path="res://scripts/torch.gd" id="1_nhse6"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1w2vr"]
+atlas = ExtResource("1_4cv3k")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pgxyw"]
+atlas = ExtResource("1_4cv3k")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fh66k"]
+atlas = ExtResource("1_4cv3k")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kfhp3"]
+atlas = ExtResource("1_4cv3k")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nk7we"]
+atlas = ExtResource("1_4cv3k")
+region = Rect2(0, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xb6w2"]
+atlas = ExtResource("1_4cv3k")
+region = Rect2(64, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_chro2"]
+atlas = ExtResource("1_4cv3k")
+region = Rect2(128, 64, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7xwa4"]
+atlas = ExtResource("1_4cv3k")
+region = Rect2(192, 64, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_w8pxt"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1w2vr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pgxyw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fh66k")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kfhp3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nk7we")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xb6w2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_chro2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7xwa4")
+}],
+"loop": true,
+"name": &"default",
+"speed": 8.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_l6sax"]
+colors = PackedColorArray(0.930375, 0.326681, 0.27838, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_yd5rd"]
+gradient = SubResource("Gradient_l6sax")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.9, 0.9)
+
+[node name="Torch" type="Node2D"]
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_nhse6")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_w8pxt")
+frame_progress = 0.793827
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(-1, -7)
+texture = SubResource("GradientTexture2D_yd5rd")

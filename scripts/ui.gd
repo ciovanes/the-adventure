@@ -20,10 +20,8 @@ func update_mana(new_mana: int) -> void:
 	mana_label.text = "%d" % new_mana
 
 
-
-func _on_character_body_2d_health_updated(new_health: Variant) -> void:
+func _on_main_character_health_updated(new_health: Variant) -> void:
 	update_health(new_health)
 
-
-func _on_character_body_2d_mana_updated(new_mana: Variant) -> void:
+func _on_main_character_mana_updated(new_mana: Variant) -> void:
 	update_mana(new_mana)

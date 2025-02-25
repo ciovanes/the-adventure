@@ -328,7 +328,7 @@ radius = 21.0
 height = 42.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_olhmc"]
-size = Vector2(237, 61)
+size = Vector2(237, 29)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_nevlr"]
 radius = 25.0799
@@ -344,7 +344,6 @@ animation = &"attack"
 shape = SubResource("CapsuleShape2D_acf22")
 
 [node name="Hurtbox" type="Area2D" parent="." groups=["enemy_hurtbox"]]
-visible = false
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
@@ -361,15 +360,13 @@ disabled = true
 debug_color = Color(0.867516, 0.299849, 0.489696, 0.42)
 
 [node name="DetectionArea" type="Area2D" parent="."]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea"]
-position = Vector2(0, -15.5)
+position = Vector2(0, 0.5)
 shape = SubResource("RectangleShape2D_olhmc")
 debug_color = Color(0.506257, 0.574641, 0.20994, 0.42)
 
 [node name="AttackingArea" type="Area2D" parent="."]
-visible = false
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AttackingArea"]

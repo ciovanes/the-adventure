@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://ceoh0aig73k2m"]
+
+[ext_resource type="Script" path="res://scripts/main_menu.gd" id="1_2mwbm"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_2mwbm")
+
+[node name="StartButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = -15.5
+offset_right = 48.0
+offset_bottom = 15.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Start Game"
+
+[connection signal="button_down" from="StartButton" to="." method="_on_start_button_button_down"]

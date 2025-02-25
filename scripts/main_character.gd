@@ -217,6 +217,10 @@ func die() -> void:
 	set_physics_process(false)
 	animated_sprite_2d.play("death")
 	
+	# Go to death screen
+	var death_screen = preload("res://scenes/death_screen.tscn").instantiate()
+	get_tree().root.add_child(death_screen)
+	
 func take_damage(damage: int):
 	if current_state != State.DEFENDING:
 		health -= damage

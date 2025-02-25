@@ -8,7 +8,6 @@ extends CharacterBody2D
 @onready var hitbox: Area2D = $Hitbox
 @onready var hitbox_collision: CollisionShape2D = $Hitbox/CollisionShape2D
 @onready var attack_cooldown: Timer = $AttackCooldown
-@onready var attack_timer: Timer = $AttackTimer
 @onready var detection_area: Area2D = $DetectionArea
 @onready var navigation_agent: NavigationAgent2D = $NavigationAgent2D
 
